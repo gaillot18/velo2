@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 
 from modsim import State, TimeSeries, flip
+import concurrent.futures
 
 bikeshare = State(mailly=10, moulin=2)
 
@@ -33,15 +34,14 @@ def run_simulation(num_steps, p1, p2):
         results[i + 1] = bikeshare.mailly
     return results
 
-num_steps, p1, p2 = 10000, 0.5, 0.4
-result1 = run_simulation(num_steps, p1, p2)
 
-num_steps, p1, p2 = 10000, 0.5, 0.33
-result2 = run_simulation(num_steps, p1, p2)
+def run_simulations_in_parallel(params_list):
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        futures = [executor.submit(run_simulation, *params) for params in params_list]
+        return [future.result() for future in futures]
 
-num_steps, p1, p2 = 10000, 0.6 , 0.4
-result3 = run_simulation(num_steps, p1, p2)
-
+params_list = [(10000, 0.5, 0.47), (10000, 0.5, 0.33), (10000, 0.6, 0.47)]
+result1, result2, result3 = run_simulations_in_parallel(params_list)
 
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 8))
 
