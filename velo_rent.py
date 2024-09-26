@@ -1,22 +1,5 @@
-# download modsim.py if necessary
-
-from os.path import basename, exists
 
 import matplotlib.pyplot as plt
-
-
-def download(url):
-    filename = basename(url)
-    if not exists(filename):
-        from urllib.request import urlretrieve
-
-        local, _ = urlretrieve(url, filename)
-        print("Downloaded " + local)
-
-
-download("https://github.com/AllenDowney/ModSimPy/raw/master/modsim.py")
-
-# import functions from modsim
 
 from modsim import State, TimeSeries, flip
 
@@ -42,20 +25,41 @@ def step(p1, p2):
     if flip(p2):
         velo_a_moulin()
 
+def run_simulation(num_steps, p1, p2):
+    results = TimeSeries()
+    results[0] = bikeshare.mailly
+    for i in range(num_steps):
+        step(p1, p2)
+        results[i + 1] = bikeshare.mailly
+    return results
 
-results = TimeSeries()
+num_steps, p1, p2 = 10000, 0.5, 0.4
+result1 = run_simulation(num_steps, p1, p2)
 
-results[0] = bikeshare.mailly
+num_steps, p1, p2 = 10000, 0.5, 0.33
+result2 = run_simulation(num_steps, p1, p2)
 
-for i in range(60 * 14 * 30):
-    # print(f"step {i}")
-    step(0.5, 0.4)
-    results[i + 1] = bikeshare.mailly
+num_steps, p1, p2 = 10000, 0.6 , 0.4
+result3 = run_simulation(num_steps, p1, p2)
 
-fig, ax = plt.subplots()
-ax.plot(results)
-ax.set_title("Velos à Mailly")
-ax.set_xlabel("Temps")
-ax.set_ylabel("nombre")
-plt.show()
+
+fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 8))
+
+ax1.plot(result1)
+ax1.set_title("Velos à Mailly")
+ax1.set_xlabel("Temps")
+ax1.set_ylabel("nombre")
+
+ax2.plot(result2)
+ax2.set_title("Velos à Mailly")
+ax2.set_xlabel("Temps")
+ax2.set_ylabel("nombre")
+
+ax3.plot(result3)
+ax3.set_title("Velos à Mailly")
+ax3.set_xlabel("Temps")
+ax3.set_ylabel("nombre")
+
+plt.savefig("velo_rent_parallel.png", dpi=300)
+
 
