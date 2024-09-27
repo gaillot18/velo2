@@ -43,5 +43,5 @@ ax.plot(results)
 ax.set_title("Velos à Mailly")
 ax.set_xlabel("Temps")
 ax.set_ylabel("nombre")
-plt.show()
+plt.savefig("velos_a_mailly.png")
 
