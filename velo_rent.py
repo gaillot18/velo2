@@ -64,12 +64,29 @@ def run_simulation(numstep, p1, p2):
         results[i + 1] = bikeshare.mailly
     return results
 
-numstep, p1, p2 = 100, 0.5, 0.47
-res = run_simulation(numstep, p1, p2)
+numstep, p1, p2 = 10000, 0.5, 0.47
+res1 = run_simulation(numstep, p1, p2)
 
-fig, ax = plt.subplots()
-ax.plot(res)
-ax.set_title("Velos à Mailly")
-ax.set_xlabel("Temps")
-ax.set_ylabel("nombre")
+numstep, p1, p2 = 10000, 0.5, 0.33
+res2 = run_simulation(numstep, p1, p2)
+
+numstep, p1, p2 = 10000, 0.6, 0.47
+res3 = run_simulation(numstep, p1, p2)
+
+fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
+ax1.plot(res1)
+ax1.set_title("Velos à Mailly")
+ax1.set_xlabel("Temps")
+ax1.set_ylabel("nombre")
+
+ax2.plot(res2)
+ax2.set_title("Velos à Mailly")
+ax2.set_xlabel("Temps")
+ax2.set_ylabel("nombre")
+
+ax3.plot(res3)
+ax3.set_title("Velos à Mailly")
+ax3.set_xlabel("Temps")
+ax3.set_ylabel("nombre")
+
 plt.savefig("mailly.png")
