@@ -4,20 +4,6 @@ from os.path import basename, exists
 
 import matplotlib.pyplot as plt
 
-
-def download(url):
-    filename = basename(url)
-    if not exists(filename):
-        from urllib.request import urlretrieve
-
-        local, _ = urlretrieve(url, filename)
-        print("Downloaded " + local)
-
-
-download("https://github.com/AllenDowney/ModSimPy/raw/master/modsim.py")
-
-# import functions from modsim
-
 from modsim import State, TimeSeries, flip
 
 bikeshare = State(mailly=10, moulin=2)
@@ -49,7 +35,7 @@ results[0] = bikeshare.mailly
 
 for i in range(60 * 14 * 30):
     # print(f"step {i}")
-    step(0.5, 0.4)
+    step(0.5, 0.5)
     results[i + 1] = bikeshare.mailly
 
 fig, ax = plt.subplots()
