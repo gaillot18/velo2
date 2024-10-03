@@ -1,4 +1,7 @@
-import concurrent.futures
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+from multiprocessing import Pool
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -67,12 +70,12 @@ def run_simulation(num_steps, p1, p2):
 
 
 def run_simulations_in_parallel(params_list):
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        futures = [executor.submit(run_simulation, *params) for params in params_list]
-        return [future.result() for future in futures]
+    with Pool(3) as p:
+        result = p.starmap_async(run_simulation, params_list)
+        return result.get()
 
 
-params_list = [(10000, 0.5, 0.47), (10000, 0.5, 0.33), (10000, 0.6, 0.47)]
+params_list = [(10000, 0.5, 0.47), (10000, 0.5, 0.33), (10000, 0.47, 0.6)]
 res1, res2, res3 = run_simulations_in_parallel(params_list)
 
 
