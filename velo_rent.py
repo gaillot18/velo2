@@ -37,19 +37,25 @@ def TimeSeries(*args, **kwargs):
     return series
 
 
-bikeshare = State(mailly=10, moulin=2)
+bikeshare = State(mailly=10, moulin=10, discontent=0)
 
 
 def velo_a_moulin():
     # print('Moving a bike to moulin')
-    bikeshare.mailly -= 1
-    bikeshare.moulin += 1
+    if bikeshare.mailly > 0:
+        bikeshare.mailly -= 1
+        bikeshare.moulin += 1
+    else:
+        bikeshare.discontent += 1
 
 
 def velo_a_mailly():
     # print('Moving a bike to mailly')
-    bikeshare.moulin -= 1
-    bikeshare.mailly += 1
+    if bikeshare.moulin > 0:
+        bikeshare.moulin -= 1
+        bikeshare.mailly += 1
+    else:
+        bikeshare.discontent += 1
 
 
 def step(p1, p2):
@@ -62,11 +68,14 @@ def step(p1, p2):
 
 def run_simulation(num_steps, p1, p2):
     results = TimeSeries()
+    discontent = TimeSeries()
     results[0] = bikeshare.mailly
+    discontent[0] = bikeshare.discontent
     for i in range(num_steps):
         step(p1, p2)
         results[i + 1] = bikeshare.mailly
-    return results
+        discontent[i + 1] = bikeshare.discontent
+    return [results, discontent]
 
 
 def run_simulations_in_parallel(params_list):
@@ -80,17 +89,22 @@ res1, res2, res3 = run_simulations_in_parallel(params_list)
 
 
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
-ax1.plot(res1)
+ax1.plot(res1[0])
+ax1.plot(res1[1], color="red")
 ax1.set_title("Velos à Mailly")
 ax1.set_xlabel("Temps")
 ax1.set_ylabel("nombre")
 
 ax2.plot(res2)
+ax2.plot(res2[0])
+ax2.plot(res2[1], color="red")
 ax2.set_title("Velos à Mailly")
 ax2.set_xlabel("Temps")
 ax2.set_ylabel("nombre")
 
 ax3.plot(res3)
+ax3.plot(res3[0])
+ax3.plot(res3[1], color="red")
 ax3.set_title("Velos à Mailly")
 ax3.set_xlabel("Temps")
 ax3.set_ylabel("nombre")
