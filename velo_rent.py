@@ -62,3 +62,4 @@ ax.set_ylabel("nombre")
 plt.savefig("mailly.png")
 
 # Ajout test
+# Test fetch
