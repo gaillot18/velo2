@@ -96,3 +96,5 @@ ax3.set_xlabel("Temps")
 ax3.set_ylabel("nombre")
 
 plt.savefig("mailly.png")
+
+# Modification du fichier...
