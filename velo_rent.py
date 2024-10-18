@@ -61,5 +61,39 @@ ax.set_xlabel("Temps")
 ax.set_ylabel("nombre")
 plt.savefig("mailly.png")
 
-# Ajout test
-# Test fetch2
+def calculer_mecontentement(nb_velos, nb_velos_optimal=5):
+    mecontentement = abs(nb_velos - nb_velos_optimal)
+    return mecontentement
+
+def run_simulation_with_mecontentement(num_steps, p1, p2):
+    results = TimeSeries()
+    mecontentement_series = TimeSeries()
+    
+    nb_velos_optimal = 5
+
+    results[0] = bikeshare.mailly
+    mecontentement_series[0] = calculer_mecontentement(bikeshare.mailly, nb_velos_optimal)
+    
+    for i in range(1, num_steps + 1):
+        step(p1, p2)
+        results[i] = bikeshare.mailly
+        mecontentement_series[i] = calculer_mecontentement(bikeshare.mailly, nb_velos_optimal)
+    
+    return results, mecontentement_series
+
+results, mecontentement = run_simulation_with_mecontentement(10000, 0.5, 0.4)
+
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 10))
+
+ax1.plot(results)
+ax1.set_title("Nombre de vélos à Mailly")
+ax1.set_xlabel("Temps")
+ax1.set_ylabel("Nombre de vélos")
+
+ax2.plot(mecontentement, color='red')
+ax2.set_title("Mécontentement à Mailly")
+ax2.set_xlabel("Temps")
+ax2.set_ylabel("Mécontentement")
+
+plt.tight_layout()
+plt.savefig("mailly_mecontentement.png")
